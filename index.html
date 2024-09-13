@@ -16,15 +16,24 @@
             flex-direction: column;
             align-items: center;
         }
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            width: 100%;
+        }
         .coin-icon {
-            width: 100px;
-            height: 100px;
+            width: 150px;
+            height: 150px;
             background: url('coin.png') no-repeat center;
             background-size: contain;
-            margin-top: 40px;
+            margin-bottom: 20px;
         }
         .coin-count {
-            font-size: 24px;
+            font-size: 36px;
+            text-align: center;
             margin-bottom: 40px;
         }
         .buttons {
@@ -37,12 +46,11 @@
             background-color: black;
         }
         .button {
-            background-color: yellow;
+            background-color: transparent;
             border: none;
             width: 60px;
             height: 60px;
             cursor: pointer;
-            border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -50,6 +58,11 @@
         .button img {
             width: 40px;
             height: 40px;
+            filter: brightness(0.7); /* Светло-серый цвет */
+            transition: filter 0.2s ease;
+        }
+        .button.active img {
+            filter: brightness(1); /* Белый цвет при нажатии */
         }
         .hidden {
             display: none;
@@ -59,7 +72,7 @@
 <body>
 
     <!-- Основная страница с иконкой монеты и счетчиком -->
-    <div id="home">
+    <div id="home" class="main-content">
         <div class="coin-icon"></div>
         <div class="coin-count">Coins: <span id="coin-count">100</span></div>
     </div>
@@ -76,21 +89,21 @@
 
     <!-- Черный экран -->
     <div id="black-screen" class="hidden">
-        <h2>Black Screen</h2>
+        <h2>Connect wallet</h2>
     </div>
 
     <!-- Панель кнопок -->
     <div class="buttons">
-        <button class="button" onclick="goHome()">
+        <button class="button" onclick="activateButton(this); goHome();">
             <img src="home_icon.png" alt="Home">
         </button>
-        <button class="button" onclick="showTasks()">
+        <button class="button" onclick="activateButton(this); showTasks();">
             <img src="tasks_icon.png" alt="Tasks">
         </button>
-        <button class="button" onclick="showFriends()">
+        <button class="button" onclick="activateButton(this); showFriends();">
             <img src="friends_icon.png" alt="Friends">
         </button>
-        <button class="button" onclick="showBlackScreen()">
+        <button class="button" onclick="activateButton(this); showBlackScreen();">
             <img src="wallet_icon.png" alt="Black Screen">
         </button>
     </div>
@@ -122,6 +135,13 @@
             document.getElementById('tasks').classList.add('hidden');
             document.getElementById('friends').classList.add('hidden');
             document.getElementById('black-screen').classList.add('hidden');
+        }
+
+        // Функция для активации кнопки и изменения цвета иконки
+        function activateButton(button) {
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(btn => btn.classList.remove('active')); // Убираем активный класс у всех кнопок
+            button.classList.add('active'); // Добавляем активный класс нажатой кнопке
         }
     </script>
 
