@@ -3,21 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Black Screen Game</title>
+    <title>Coin Game</title>
     <style>
         body, html {
             height: 100%;
             margin: 0;
             background-color: black;
+            font-family: Arial, sans-serif;
             color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: Arial, sans-serif;
+            flex-direction: column;
+        }
+        .coin-icon {
+            width: 100px;
+            height: 100px;
+            background: url('coin.png') no-repeat center;
+            background-size: contain;
+            margin-bottom: 20px;
+        }
+        .coin-count {
+            font-size: 24px;
+            margin-bottom: 40px;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .button {
+            background-color: yellow;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            color: black;
+            border-radius: 5px;
+            text-align: center;
+            width: 200px;
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <h1>Black Screen Game</h1>
+
+    <!-- Основная страница с иконкой монеты и счетчиком -->
+    <div id="home">
+        <div class="coin-icon"></div>
+        <div class="coin-count">Coins: <span id="coin-count">100</span></div>
+
+        <div class="buttons">
+            <button class="button" onclick="goHome()">Home</button>
+            <button class="button" onclick="showTasks()">Tasks</button>
+            <button class="button" onclick="showFriends()">Friends</button>
+            <button class="button" onclick="showBlackScreen()">Black Screen</button>
+        </div>
+    </div>
+
+    <!-- Страница с заданиями -->
+    <div id="tasks" class="hidden">
+        <h2>Tasks List</h2>
+        <div class="buttons">
+            <button class="button" onclick="goHome()">Back to Home</button>
+        </div>
+    </div>
+
+    <!-- Страница с приглашенными друзьями -->
+    <div id="friends" class="hidden">
+        <h2>Invited Friends</h2>
+        <div class="buttons">
+            <button class="button" onclick="goHome()">Back to Home</button>
+        </div>
+    </div>
+
+    <!-- Черный экран -->
+    <div id="black-screen" class="hidden">
+        <h2>Black Screen</h2>
+        <div class="buttons">
+            <button class="button" onclick="goHome()">Back to Home</button>
+        </div>
+    </div>
+
+    <script>
+        // Функции для переключения между экранами
+        function goHome() {
+            hideAll();
+            document.getElementById('home').classList.remove('hidden');
+        }
+
+        function showTasks() {
+            hideAll();
+            document.getElementById('tasks').classList.remove('hidden');
+        }
+
+        function showFriends() {
+            hideAll();
+            document.getElementById('friends').classList.remove('hidden');
+        }
+
+        function showBlackScreen() {
+            hideAll();
+            document.getElementById('black-screen').classList.remove('hidden');
+        }
+
+        function hideAll() {
+            document.getElementById('home').classList.add('hidden');
+            document.getElementById('tasks').classList.add('hidden');
+            document.getElementById('friends').classList.add('hidden');
+            document.getElementById('black-screen').classList.add('hidden');
+        }
+    </script>
+
 </body>
 </html>
