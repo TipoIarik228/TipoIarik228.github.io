@@ -12,16 +12,16 @@
             font-family: Arial, sans-serif;
             color: white;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            justify-content: space-between;
             flex-direction: column;
+            align-items: center;
         }
         .coin-icon {
             width: 100px;
             height: 100px;
             background: url('coin.png') no-repeat center;
             background-size: contain;
-            margin-bottom: 20px;
+            margin-top: 40px;
         }
         .coin-count {
             font-size: 24px;
@@ -29,19 +29,27 @@
         }
         .buttons {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
+            justify-content: space-around;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            padding: 20px;
+            background-color: black;
         }
         .button {
             background-color: yellow;
             border: none;
-            padding: 10px 20px;
-            font-size: 18px;
+            width: 60px;
+            height: 60px;
             cursor: pointer;
-            color: black;
-            border-radius: 5px;
-            text-align: center;
-            width: 200px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .button img {
+            width: 40px;
+            height: 40px;
         }
         .hidden {
             display: none;
@@ -54,37 +62,37 @@
     <div id="home">
         <div class="coin-icon"></div>
         <div class="coin-count">Coins: <span id="coin-count">100</span></div>
-
-        <div class="buttons">
-            <button class="button" onclick="goHome()">Home</button>
-            <button class="button" onclick="showTasks()">Tasks</button>
-            <button class="button" onclick="showFriends()">Friends</button>
-            <button class="button" onclick="showBlackScreen()">Black Screen</button>
-        </div>
     </div>
 
     <!-- Страница с заданиями -->
     <div id="tasks" class="hidden">
         <h2>Tasks List</h2>
-        <div class="buttons">
-            <button class="button" onclick="goHome()">Back to Home</button>
-        </div>
     </div>
 
     <!-- Страница с приглашенными друзьями -->
     <div id="friends" class="hidden">
         <h2>Invited Friends</h2>
-        <div class="buttons">
-            <button class="button" onclick="goHome()">Back to Home</button>
-        </div>
     </div>
 
     <!-- Черный экран -->
     <div id="black-screen" class="hidden">
         <h2>Black Screen</h2>
-        <div class="buttons">
-            <button class="button" onclick="goHome()">Back to Home</button>
-        </div>
+    </div>
+
+    <!-- Панель кнопок -->
+    <div class="buttons">
+        <button class="button" onclick="goHome()">
+            <img src="home_icon.png" alt="Home">
+        </button>
+        <button class="button" onclick="showTasks()">
+            <img src="tasks_icon.png" alt="Tasks">
+        </button>
+        <button class="button" onclick="showFriends()">
+            <img src="friends_icon.png" alt="Friends">
+        </button>
+        <button class="button" onclick="showBlackScreen()">
+            <img src="wallet_icon.png" alt="Black Screen">
+        </button>
     </div>
 
     <script>
