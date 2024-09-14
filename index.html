@@ -115,6 +115,9 @@
     </div>
 
     <script>
+        // Telegram WebApp API - раскрытие на весь экран
+        window.Telegram.WebApp.expand();
+
         // Отключение скроллинга на мобильных устройствах
         document.addEventListener('touchmove', function(event) {
             event.preventDefault();
