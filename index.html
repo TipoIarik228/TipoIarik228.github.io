@@ -12,7 +12,8 @@
             font-family: Arial, sans-serif;
             color: white;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
             user-select: none;
             touch-action: none;
@@ -23,8 +24,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            flex-grow: 1;
             width: 100%;
-            height: calc(100% - 70px); /* Учитываем высоту панели кнопок */
             position: relative;
             overflow: hidden;
         }
@@ -34,6 +35,7 @@
             background: url('coin.png') no-repeat center;
             background-size: contain;
             margin-bottom: 20px;
+            margin-top: -300px;
         }
         .coin-count {
             font-size: 36px;
@@ -48,7 +50,6 @@
             bottom: 0;
             padding: 10px; /* Уменьшил отступ для лучшего соответствия размерам кнопок */
             background-color: black;
-            box-sizing: border-box; /* Учитываем паддинг в ширине и высоте */
         }
         .button {
             background-color: transparent;
@@ -137,23 +138,9 @@
     </div>
 
     <script>
-        // Функция для активации полноэкранного режима
-        function enterFullScreen() {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
-                document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
-                document.documentElement.msRequestFullscreen();
-            }
-        }
-
         // Проверяем наличие Telegram WebApp API
         if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready(); // Инициализация WebApp
-            window.Telegram.WebApp.expand(); // Расширение на весь экран
+            window.Telegram.WebApp.expand();
         } else {
             console.error("Telegram WebApp не обнаружен.");
         }
@@ -167,7 +154,6 @@
         window.onload = function() {
             goHome(); // Показываем домашнюю страницу при загрузке
             activateButton(document.getElementById('homeButton')); // Активируем кнопку "Дом"
-            enterFullScreen(); // Переключаемся в полноэкранный режим
         };
 
         // Функции для переключения между экранами
@@ -211,6 +197,6 @@
             button.classList.add('active');
         }
     </script>
-
+  <script async src="https://telegram.org/js/telegram-web-app.js"></script>
 </body>
 </html>
