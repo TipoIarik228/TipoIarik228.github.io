@@ -100,7 +100,7 @@
 
     <!-- Панель кнопок -->
     <div class="buttons">
-        <button class="button" onclick="activateButton(this); goHome();">
+        <button id="homeButton" class="button" onclick="activateButton(this); goHome();">
             <img src="home_icon.png" alt="Home">
         </button>
         <button class="button" onclick="activateButton(this); showTasks();">
@@ -119,6 +119,12 @@
         document.addEventListener('touchmove', function(event) {
             event.preventDefault();
         }, { passive: false });
+
+        // Функция, которая запускается при загрузке страницы
+        window.onload = function() {
+            goHome(); // Показываем домашнюю страницу при загрузке
+            activateButton(document.getElementById('homeButton')); // Активируем кнопку "Дом"
+        };
 
         // Функции для переключения между экранами
         function goHome() {
