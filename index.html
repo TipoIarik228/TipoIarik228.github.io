@@ -136,14 +136,17 @@
             <span class="button-label"><b>Wallet</b></span>
         </button>
     </div>
-
+  <script async src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        // Проверяем наличие Telegram WebApp API
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.expand();
-        } else {
-            console.error("Telegram WebApp не обнаружен.");
-        }
+        // Проверяем наличие Telegram WebApp API после загрузки скрипта
+        window.addEventListener('load', () => {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand(); // Попробуйте расширить приложение на весь экран
+            } else {
+                console.error("Telegram WebApp не обнаружен.");
+            }
+        });
 
         // Отключение скроллинга на мобильных устройствах
         document.addEventListener('touchmove', function(event) {
@@ -151,12 +154,6 @@
         }, { passive: false });
 
         // Функция, которая запускается при загрузке страницы
-        window.onload = function() {
-            goHome(); // Показываем домашнюю страницу при загрузке
-            activateButton(document.getElementById('homeButton')); // Активируем кнопку "Дом"
-        };
-
-        // Функции для переключения между экранами
         function goHome() {
             hideAll();
             document.getElementById('home').classList.remove('hidden');
@@ -196,7 +193,13 @@
             buttons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
         }
+
+        // Запуск при загрузке
+        window.onload = function() {
+            goHome(); // Показываем домашнюю страницу при загрузке
+            activateButton(document.getElementById('homeButton')); // Активируем кнопку "Дом"
+        };
     </script>
-  <script async src="https://telegram.org/js/telegram-web-app.js"></script>
+
 </body>
 </html>
