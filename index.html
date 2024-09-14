@@ -48,14 +48,14 @@
             width: 100%;
             position: fixed;
             bottom: 0;
-            padding: 20px;
+            padding: 10px; /* Уменьшил отступ для лучшего соответствия размерам кнопок */
             background-color: black;
         }
         .button {
             background-color: transparent;
             border: none;
-            width: 60px;
-            height: 80px; /* Увеличили высоту для размещения текста */
+            width: 50px; /* Уменьшил ширину кнопок */
+            height: 70px; /* Уменьшил высоту кнопок */
             cursor: pointer;
             display: flex;
             flex-direction: column;
@@ -63,13 +63,13 @@
             align-items: center;
         }
         .button img {
-            width: 40px;
-            height: 40px;
+            width: 30px; /* Уменьшил размер иконок */
+            height: 30px; /* Уменьшил размер иконок */
             filter: brightness(0.7); /* Серый цвет для неактивных иконок */
             transition: filter 0.2s ease;
         }
         .button-label {
-            font-size: 12px;
+            font-size: 10px; /* Уменьшил размер шрифта для надписей */
             color: rgba(255, 255, 255, 0.6); /* Серый цвет текста */
             margin-top: 5px;
             transition: color 0.2s ease;
@@ -103,6 +103,11 @@
         <h2>Invited Friends</h2>
     </div>
 
+    <!-- Страница с таблицей лидеров -->
+    <div id="leaderboard" class="hidden">
+        <h2>Leaderboard</h2>
+    </div>
+
     <!-- Черный экран -->
     <div id="black-screen" class="hidden">
         <h2>Connect wallet</h2>
@@ -112,19 +117,23 @@
     <div class="buttons">
         <button id="homeButton" class="button" onclick="activateButton(this); goHome();">
             <img src="home_icon.png" alt="Home">
-          <span class="button-label"><b>Home</b></span>
+            <span class="button-label"><b>Home</b></span>
         </button>
         <button class="button" onclick="activateButton(this); showTasks();">
             <img src="tasks_icon.png" alt="Tasks">
-          <span class="button-label"><b>Tasks</b></span>
+            <span class="button-label"><b>Tasks</b></span>
         </button>
         <button class="button" onclick="activateButton(this); showFriends();">
             <img src="friends_icon.png" alt="Friends">
-          <span class="button-label"><b>Friends</b></span>
+            <span class="button-label"><b>Friends</b></span>
+        </button>
+        <button class="button" onclick="activateButton(this); showLeaderboard();">
+            <img src="leaderboard_icon.png" alt="Leaderboard">
+            <span class="button-label"><b>Leaderboard</b></span>
         </button>
         <button class="button" onclick="activateButton(this); showBlackScreen();">
             <img src="wallet_icon.png" alt="Black Screen">
-          <span class="button-label"><b>Wallet</b></span>
+            <span class="button-label"><b>Wallet</b></span>
         </button>
     </div>
 
@@ -163,6 +172,11 @@
             document.getElementById('friends').classList.remove('hidden');
         }
 
+        function showLeaderboard() {
+            hideAll();
+            document.getElementById('leaderboard').classList.remove('hidden');
+        }
+
         function showBlackScreen() {
             hideAll();
             document.getElementById('black-screen').classList.remove('hidden');
@@ -172,14 +186,15 @@
             document.getElementById('home').classList.add('hidden');
             document.getElementById('tasks').classList.add('hidden');
             document.getElementById('friends').classList.add('hidden');
+            document.getElementById('leaderboard').classList.add('hidden');
             document.getElementById('black-screen').classList.add('hidden');
         }
 
         // Функция для активации кнопки и изменения цвета иконки и текста
         function activateButton(button) {
             const buttons = document.querySelectorAll('.button');
-            buttons.forEach(btn => btn.classList.remove('active')); // Убираем активный класс у всех кнопок
-            button.classList.add('active'); // Добавляем активный класс нажатой кнопке
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
         }
     </script>
 
