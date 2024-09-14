@@ -137,9 +137,23 @@
     </div>
 
     <script>
+        // Функция для активации полноэкранного режима
+        function enterFullScreen() {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
+                document.documentElement.msRequestFullscreen();
+            }
+        }
+
         // Проверяем наличие Telegram WebApp API
         if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.expand();
+            window.Telegram.WebApp.ready(); // Инициализация WebApp
+            window.Telegram.WebApp.expand(); // Расширение на весь экран
         } else {
             console.error("Telegram WebApp не обнаружен.");
         }
@@ -153,6 +167,7 @@
         window.onload = function() {
             goHome(); // Показываем домашнюю страницу при загрузке
             activateButton(document.getElementById('homeButton')); // Активируем кнопку "Дом"
+            enterFullScreen(); // Переключаемся в полноэкранный режим
         };
 
         // Функции для переключения между экранами
@@ -195,26 +210,6 @@
             buttons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
         }
-
-        // Функция для активации полноэкранного режима
-        function enterFullScreen() {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
-                document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
-                document.documentElement.msRequestFullscreen();
-            }
-        }
-
-        // Запускаем полноэкранный режим при загрузке страницы
-        window.onload = function() {
-            goHome(); // Показываем домашнюю страницу при загрузке
-            activateButton(document.getElementById('homeButton')); // Активируем кнопку "Дом"
-            enterFullScreen(); // Переключаемся в полноэкранный режим
-        };
     </script>
 
 </body>
