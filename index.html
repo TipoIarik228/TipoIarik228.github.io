@@ -55,20 +55,30 @@
             background-color: transparent;
             border: none;
             width: 60px;
-            height: 60px;
+            height: 80px; /* Увеличили высоту для размещения текста */
             cursor: pointer;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
         .button img {
             width: 40px;
             height: 40px;
-            filter: brightness(0.7);
+            filter: brightness(0.7); /* Серый цвет для неактивных иконок */
             transition: filter 0.2s ease;
         }
+        .button-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6); /* Серый цвет текста */
+            margin-top: 5px;
+            transition: color 0.2s ease;
+        }
         .button.active img {
-            filter: brightness(1);
+            filter: brightness(1); /* Белый цвет иконки при активации */
+        }
+        .button.active .button-label {
+            color: white; /* Белый цвет текста при активации */
         }
         .hidden {
             display: none;
@@ -102,15 +112,19 @@
     <div class="buttons">
         <button id="homeButton" class="button" onclick="activateButton(this); goHome();">
             <img src="home_icon.png" alt="Home">
+          <span class="button-label"><b>Home</b></span>
         </button>
         <button class="button" onclick="activateButton(this); showTasks();">
             <img src="tasks_icon.png" alt="Tasks">
+          <span class="button-label"><b>Tasks</b></span>
         </button>
         <button class="button" onclick="activateButton(this); showFriends();">
             <img src="friends_icon.png" alt="Friends">
+          <span class="button-label"><b>Friends</b></span>
         </button>
         <button class="button" onclick="activateButton(this); showBlackScreen();">
             <img src="wallet_icon.png" alt="Black Screen">
+          <span class="button-label"><b>Wallet</b></span>
         </button>
     </div>
 
@@ -161,11 +175,11 @@
             document.getElementById('black-screen').classList.add('hidden');
         }
 
-        // Функция для активации кнопки и изменения цвета иконки
+        // Функция для активации кнопки и изменения цвета иконки и текста
         function activateButton(button) {
             const buttons = document.querySelectorAll('.button');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
+            buttons.forEach(btn => btn.classList.remove('active')); // Убираем активный класс у всех кнопок
+            button.classList.add('active'); // Добавляем активный класс нажатой кнопке
         }
     </script>
 
