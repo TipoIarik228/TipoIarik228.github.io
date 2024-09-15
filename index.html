@@ -42,57 +42,20 @@
             text-align: center;
             margin-bottom: 40px;
         }
-        .welcome-popup {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-        }
-        .welcome-popup h2 {
-            margin: 10px 0;
-            font-size: 36px;
-        }
-        .welcome-popup .bonus-text {
-            font-size: 24px;
-            margin: 20px 0;
-        }
-        .welcome-popup .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 30px;
-            color: white;
-            cursor: pointer;
-        }
-        @keyframes add-coins {
-            0% { opacity: 0; transform: translateY(50px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        .coins-animation {
-            animation: add-coins 1s ease-out forwards;
-        }
         .buttons {
             display: flex;
             justify-content: space-around;
             width: 100%;
             position: fixed;
             bottom: 0;
-            padding: 10px;
+            padding: 10px; /* Уменьшил отступ для лучшего соответствия размерам кнопок */
             background-color: black;
         }
         .button {
             background-color: transparent;
             border: none;
-            width: 50px;
-            height: 70px;
+            width: 50px; /* Уменьшил ширину кнопок */
+            height: 70px; /* Уменьшил высоту кнопок */
             cursor: pointer;
             display: flex;
             flex-direction: column;
@@ -100,22 +63,22 @@
             align-items: center;
         }
         .button img {
-            width: 30px;
-            height: 30px;
-            filter: brightness(0.7);
+            width: 30px; /* Уменьшил размер иконок */
+            height: 30px; /* Уменьшил размер иконок */
+            filter: brightness(0.7); /* Серый цвет для неактивных иконок */
             transition: filter 0.2s ease;
         }
         .button-label {
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.6);
+            font-size: 10px; /* Уменьшил размер шрифта для надписей */
+            color: rgba(255, 255, 255, 0.6); /* Серый цвет текста */
             margin-top: 5px;
             transition: color 0.2s ease;
         }
         .button.active img {
-            filter: brightness(1);
+            filter: brightness(1); /* Белый цвет иконки при активации */
         }
         .button.active .button-label {
-            color: white;
+            color: white; /* Белый цвет текста при активации */
         }
         .hidden {
             display: none;
@@ -123,17 +86,11 @@
     </style>
 </head>
 <body>
-  <!-- Окно приветствия -->
-    <div id="welcome-popup" class="welcome-popup">
-        <h2>Welcome to Zeus</h2>
-        <div id="bonus-text" class="bonus-text">First join: +500 ZEUS</div>
-        <div class="close-btn" onclick="closePopup()">✖</div>
-    </div>
-  
+
     <!-- Основная страница с иконкой монеты и счетчиком -->
     <div id="home" class="main-content">
         <div class="coin-icon"></div>
-        <div class="coin-count">Coins: <span id="coin-count">0</span></div>
+        <div class="coin-count">Coins: <span id="coin-count">100</span></div>
     </div>
 
     <!-- Страница с заданиями -->
@@ -179,67 +136,25 @@
             <span class="button-label"><b>Wallet</b></span>
         </button>
     </div>
-
     <script async src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        let coinCount = 0;
-
-        // Проверка Telegram Premium
+        // Проверяем наличие Telegram WebApp API после загрузки скрипта
         window.addEventListener('load', () => {
             if (window.Telegram && window.Telegram.WebApp) {
-                const user = window.Telegram.WebApp.initDataUnsafe.user;
-                const hasPremium = user.is_premium || false;
-
-                if (hasPremium) {
-                    document.getElementById('bonus-text').textContent = 'Telegram premium bonus: +2000 ZEUS';
-                    coinCount = 2000;
-                } else {
-                    coinCount = 500;
-                }
-
-                // Telegram WebApp готово
                 window.Telegram.WebApp.ready();
-                window.Telegram.WebApp.expand();
+                window.Telegram.WebApp.expand(); // Попробуйте расширить приложение на весь экран
+              window.Telegram.WebApp.setHeaderColor("#000000"); // может переключать между светлой и темной темой
             } else {
                 console.error("Telegram WebApp не обнаружен.");
             }
         });
-
-        // Функция для закрытия окна приветствия
-        function closePopup() {
-            document.getElementById('welcome-popup').style.display = 'none';
-            addCoins();
-        }
-
-        // Функция для добавления монет с анимацией
-        function addCoins() {
-            const coinDisplay = document.getElementById('coin-count');
-            coinDisplay.textContent = 'Coins: 0';
-
-            let currentCoins = 0;
-            const interval = setInterval(() => {
-                if (currentCoins < coinCount) {
-                    currentCoins += 10;
-                    coinDisplay.textContent = 'Coins: ' + currentCoins;
-                } else {
-                    clearInterval(interval);
-                }
-            }, 50);
-        }
 
         // Отключение скроллинга на мобильных устройствах
         document.addEventListener('touchmove', function(event) {
             event.preventDefault();
         }, { passive: false });
 
-        // Функция для активации кнопки
-        function activateButton(button) {
-            const buttons = document.querySelectorAll('.button');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-        }
-
-        // Функция для домашней страницы
+        // Функция, которая запускается при загрузке страницы
         function goHome() {
             hideAll();
             document.getElementById('home').classList.remove('hidden');
@@ -273,7 +188,16 @@
             document.getElementById('black-screen').classList.add('hidden');
         }
 
+        // Функция для активации кнопки и изменения цвета иконки и текста
+        function activateButton(button) {
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        }
+
+        // Запуск при загрузке
         window.onload = function() {
+            goHome(); // Показываем домашнюю страницу при загрузке
             activateButton(document.getElementById('homeButton')); // Активируем кнопку "Дом"
         };
     </script>
