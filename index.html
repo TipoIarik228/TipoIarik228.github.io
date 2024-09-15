@@ -83,6 +83,37 @@
         .hidden {
             display: none;
         }
+        /* Новый CSS для кнопки Claim и уведомлений */
+        .claim-btn {
+            background-color: #007bff; /* Синий цвет кнопки */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
+        .notification.success {
+            background-color: #28a745; /* Зеленый цвет для успеха */
+        }
+        .notification.fail {
+            background-color: #dc3545; /* Красный цвет для ошибки */
+        }
+        .notification .icon {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -96,6 +127,11 @@
     <!-- Страница с заданиями -->
     <div id="tasks" class="hidden">
         <h2>Tasks List</h2>
+        <div class="task-item">
+            <span>Subscribe to channel</span>
+            <span class="task-reward">+500 ZEUS</span>
+            <button id="join-btn" class="claim-btn">Join</button>
+        </div>
     </div>
 
     <!-- Страница с приглашенными друзьями -->
@@ -136,23 +172,90 @@
             <span class="button-label"><b>Wallet</b></span>
         </button>
     </div>
+
+    <!-- Уведомление -->
+    <div id="notification" class="notification">
+        <span class="icon">✔️</span><span id="notification-message"></span>
+    </div>
+
     <script async src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+        let coinCount = 0;
+        let isSubscribed = false; // Замените на проверку подписки на сервере
+
         // Проверяем наличие Telegram WebApp API после загрузки скрипта
         window.addEventListener('load', () => {
             if (window.Telegram && window.Telegram.WebApp) {
+                const user = window.Telegram.WebApp.initDataUnsafe.user;
+                const hasPremium = user.is_premium || false;
+
+                if (hasPremium) {
+                    document.getElementById('coin-count').textContent = '2000';
+                    coinCount = 2000;
+                } else {
+                    document.getElementById('coin-count').textContent = '500';
+                    coinCount = 500;
+                }
+
                 window.Telegram.WebApp.ready();
                 window.Telegram.WebApp.expand(); // Попробуйте расширить приложение на весь экран
-              window.Telegram.WebApp.setHeaderColor("#000000"); // может переключать между светлой и темной темой
+                window.Telegram.WebApp.setHeaderColor("#000000"); // может переключать между светлой и темной темой
             } else {
                 console.error("Telegram WebApp не обнаружен.");
             }
+
+            goHome();
         });
 
-        // Отключение скроллинга на мобильных устройствах
-        document.addEventListener('touchmove', function(event) {
-            event.preventDefault();
-        }, { passive: false });
+        // Функция для активации кнопки и изменения цвета иконки и текста
+        function activateButton(button) {
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        }
+
+        // Функция для показа уведомлений
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notification-message');
+            const icon = document.querySelector('.notification .icon');
+
+            notificationMessage.textContent = message;
+            if (type === 'success') {
+                notification.classList.add('success');
+                notification.classList.remove('fail');
+                icon.textContent = '✔️'; // Иконка для успеха
+            } else if (type === 'fail') {
+                notification.classList.add('fail');
+                notification.classList.remove('success');
+                icon.textContent = '❌'; // Иконка для ошибки
+            }
+
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+
+        // Функция для обработки подписки и кнопки Join/Claim
+        function handleJoinButton() {
+            const joinButton = document.getElementById('join-btn');
+
+            joinButton.addEventListener('click', () => {
+                if (!isSubscribed) {
+                    // Перенаправляем на канал Telegram
+                    window.location.href = 'https://t.me/your_channel_link'; // Замените на ваш канал
+                } else {
+                    // Добавляем 500 монет на баланс
+                    coinCount += 500;
+                    document.getElementById('coin-count').textContent = coinCount;
+
+                    // Показываем сообщение об успешной подписке
+                    showNotification('Success', 'success');
+                    joinButton.textContent = 'Claim';
+                }
+            });
+        }
 
         // Функция, которая запускается при загрузке страницы
         function goHome() {
@@ -163,6 +266,7 @@
         function showTasks() {
             hideAll();
             document.getElementById('tasks').classList.remove('hidden');
+            handleJoinButton(); // Обрабатываем кнопку Join/Claim при показе Tasks
         }
 
         function showFriends() {
@@ -188,13 +292,6 @@
             document.getElementById('black-screen').classList.add('hidden');
         }
 
-        // Функция для активации кнопки и изменения цвета иконки и текста
-        function activateButton(button) {
-            const buttons = document.querySelectorAll('.button');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-        }
-
         // Запуск при загрузке
         window.onload = function() {
             goHome(); // Показываем домашнюю страницу при загрузке
@@ -204,3 +301,4 @@
 
 </body>
 </html>
+
