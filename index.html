@@ -136,13 +136,14 @@
             <span class="button-label"><b>Wallet</b></span>
         </button>
     </div>
-  <script async src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script async src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         // Проверяем наличие Telegram WebApp API после загрузки скрипта
         window.addEventListener('load', () => {
             if (window.Telegram && window.Telegram.WebApp) {
                 window.Telegram.WebApp.ready();
                 window.Telegram.WebApp.expand(); // Попробуйте расширить приложение на весь экран
+              window.Telegram.WebApp.setHeaderColor("#000000"); // может переключать между светлой и темной темой
             } else {
                 console.error("Telegram WebApp не обнаружен.");
             }
