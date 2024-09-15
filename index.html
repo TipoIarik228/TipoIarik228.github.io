@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Coin Game</title>
     <style>
+        /* Стили остаются без изменений */
         body, html {
             height: 100%;
             margin: 0;
@@ -105,7 +106,6 @@
             display: none;
             z-index: 1000;
         }
-
         .notification .icon {
             margin-right: 10px;
         }
@@ -176,7 +176,7 @@
     <script async src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         let coinCount = 0;
-        let isSubscribed = false; // Замените на проверку подписки на сервере
+        let isSubscribed = JSON.parse(localStorage.getItem('isSubscribed')) || false;
 
         // Проверяем наличие Telegram WebApp API после загрузки скрипта
         window.addEventListener('load', () => {
@@ -195,6 +195,9 @@
                 window.Telegram.WebApp.ready();
                 window.Telegram.WebApp.expand(); // Попробуйте расширить приложение на весь экран
                 window.Telegram.WebApp.setHeaderColor("#000000"); // может переключать между светлой и темной темой
+
+                // Обновляем состояние подписки и текст кнопки
+                handleJoinButton();
             } else {
                 console.error("Telegram WebApp не обнаружен.");
             }
@@ -252,8 +255,7 @@
                     document.getElementById('coin-count').textContent = coinCount;
 
                     // Показываем сообщение об успешной подписке
-                    showNotification('Success', 'success');
-                    joinButton.textContent = 'Claim';
+                    handleSuccessfulSubscription(); // Используем функцию для обработки успешной подписки
                 }
             });
         }
@@ -299,14 +301,25 @@
             activateButton(document.getElementById('homeButton')); // Активируем кнопку "Дом"
         };
 
-        // Обновление состояния подписки при возвращении на страницу Tasks
+        // Обработка состояния подписки при переходе на страницу и возвращении
         window.addEventListener('pageshow', (event) => {
             if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-                if (isSubscribed) {
-                    document.getElementById('join-btn').textContent = 'Claim';
-                }
+                handleJoinButton(); // Обновляем текст кнопки при возврате на страницу
             }
         });
+
+        // Функция для установки подписки
+        function setSubscribed() {
+            isSubscribed = true;
+            localStorage.setItem('isSubscribed', JSON.stringify(isSubscribed));
+        }
+
+        // Функция обработки успешной подписки
+        function handleSuccessfulSubscription() {
+            setSubscribed();
+            showNotification('Subscription Successful! You have received +500 ZEUS.', 'success');
+            handleJoinButton(); // Обновляем кнопку после успешной подписки
+        }
     </script>
 
 </body>
