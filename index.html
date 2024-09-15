@@ -105,12 +105,7 @@
             display: none;
             z-index: 1000;
         }
-        .notification.success {
-            background-color: #28a745; /* Зеленый цвет для успеха */
-        }
-        .notification.fail {
-            background-color: #dc3545; /* Красный цвет для ошибки */
-        }
+
         .notification .icon {
             margin-right: 10px;
         }
@@ -175,7 +170,7 @@
 
     <!-- Уведомление -->
     <div id="notification" class="notification">
-        <span class="icon">✔️</span><span id="notification-message"></span>
+        <span class="icon"></span><span id="notification-message"></span>
     </div>
 
     <script async src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -241,6 +236,12 @@
         function handleJoinButton() {
             const joinButton = document.getElementById('join-btn');
 
+            if (isSubscribed) {
+                joinButton.textContent = 'Claim';
+            } else {
+                joinButton.textContent = 'Join';
+            }
+
             joinButton.addEventListener('click', () => {
                 if (!isSubscribed) {
                     // Перенаправляем на канал Telegram
@@ -297,8 +298,16 @@
             goHome(); // Показываем домашнюю страницу при загрузке
             activateButton(document.getElementById('homeButton')); // Активируем кнопку "Дом"
         };
+
+        // Обновление состояния подписки при возвращении на страницу Tasks
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                if (isSubscribed) {
+                    document.getElementById('join-btn').textContent = 'Claim';
+                }
+            }
+        });
     </script>
 
 </body>
 </html>
-
