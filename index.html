@@ -5,24 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Coin Game</title>
     <style>
-    body, html {
-      height: 100%;
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      flex-direction: column;
-      align-items: center;
-      user-select: none;
-      touch-action: none;
-      overflow: hidden;
-      background-image: url('background_img.png'); /* Замените на URL вашего изображения */
-      background-size: 100% 100%; /* Растягивает фон на весь экран */
-      background-position: center; /* Центрирование фона */
-      background-repeat: no-repeat; /* Отключение повторения фона */
-      background-attachment: fixed; /* Фиксирует фон на месте */
-    }
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            touch-action: none;
+            overflow: hidden;
+            background-image: url('background_img.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
         .main-content {
             display: flex;
             flex-direction: column;
@@ -42,25 +42,38 @@
             margin-top: -150px;
         }
         .coin-count {
-            font-size: 36px;
+            font-size: 40px;
+            font-weight: bold;
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            letter-spacing: 1px;
+            color: white;
+        }
+        .view-history {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        .view-history:hover {
+            color: white;
         }
         .buttons {
-        display: flex;
-        justify-content: space-around;
-        width: 100%;
-        position: fixed;
-        bottom: 0;
-       padding: 10px;
-        background-color: transparent; /* Сделайте фон прозрачным */
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            padding: 10px;
+            background-color: transparent;
         }
-
         .button {
             background-color: transparent;
             border: none;
-            width: 50px; /* Уменьшил ширину кнопок */
-            height: 70px; /* Уменьшил высоту кнопок */
+            width: 50px;
+            height: 70px;
             cursor: pointer;
             display: flex;
             flex-direction: column;
@@ -68,39 +81,125 @@
             align-items: center;
         }
         .button img {
-            width: 30px; /* Уменьшил размер иконок */
-            height: 30px; /* Уменьшил размер иконок */
-            filter: brightness(0.7); /* Серый цвет для неактивных иконок */
+            width: 30px;
+            height: 30px;
+            filter: brightness(0.7);
             transition: filter 0.2s ease;
         }
         .button-label {
-            font-size: 10px; /* Уменьшил размер шрифта для надписей */
-            color: rgba(255, 255, 255, 0.6); /* Серый цвет текста */
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
             margin-top: 5px;
             transition: color 0.2s ease;
         }
         .button.active img {
-            filter: brightness(1); /* Белый цвет иконки при активации */
+            filter: brightness(1);
         }
         .button.active .button-label {
-            color: white; /* Белый цвет текста при активации */
+            color: white;
         }
         .hidden {
             display: none;
         }
+        .history-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.5s;
+        }
+        .history-content {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+        .history-content h2 {
+            margin-top: 0;
+            color: white;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+ .task-box {
+    background: rgba(100, 100, 100, 0.9); /* Немного темнее для лучшего контраста */
+    width: 100%;
+    border-radius: 10px; /* Более округлые углы */
+    padding: 30px; /* Увеличенные отступы */
+    margin: 20px auto; /* Центрирование и отступы с краев */
+    max-width: 100%; /* Максимальная ширина для больших экранов */
+    text-align: start;
+    position: relative;
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* Добавление тени для объема */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.task-box h3 {
+    margin: 0;
+    font-size: 15px; /* Увеличенный размер шрифта заголовка */
+    color: white; /* Цвет заголовка для выделения */
+}
+.task-box p {
+    font-size: 20px; /* Увеличенный размер шрифта для описания */
+    margin: 10px 0;
+    color: #e0e0e0; /* Цвет текста для лучшей читаемости */
+}
+.claim-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    transition: background-color 0.3s;
+}
+.claim-button:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
     </style>
 </head>
 <body>
-
-    <!-- Основная страница с иконкой монеты и счетчиком -->
-    <div id="home" class="main-content">
+  <div id="home" class="main-content">
         <div class="coin-icon"></div>
-        <div class="coin-count">Coins: <span id="coin-count">100</span></div>
+        <div class="coin-count">Coins: <span id="coin-count">0</span></div>
+        <div class="view-history" onclick="showHistory()">View history</div>
     </div>
 
     <!-- Страница с заданиями -->
     <div id="tasks" class="hidden">
         <h2>Tasks List</h2>
+        <div class="task-box">
+            <h3>Subscribe to the channel</h3>
+            <p>+500 ZEUS</p>
+            <button id="claimButton" class="claim-button" onclick="claimReward()">Claim</button>
+        </div>
     </div>
 
     <!-- Страница с приглашенными друзьями -->
@@ -141,71 +240,95 @@
             <span class="button-label"><b>Wallet</b></span>
         </button>
     </div>
+
+    <!-- Модальное окно истории -->
+    <div id="history-modal" class="history-modal">
+        <div class="history-content">
+            <button class="close-btn" onclick="hideHistory()">×</button>
+            <h2>History</h2>
+            <p>No history available.</p>
+        </div>
+    </div>
+
     <script async src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        // Проверяем наличие Telegram WebApp API после загрузки скрипта
-        window.addEventListener('load', () => {
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.ready();
-                window.Telegram.WebApp.expand(); // Попробуйте расширить приложение на весь экран
-              window.Telegram.WebApp.setHeaderColor("#000000"); // может переключать между светлой и темной темой
-            } else {
-                console.error("Telegram WebApp не обнаружен.");
-            }
-        });
+        let coinCount = 0; // Изначально монет 0
 
-        // Отключение скроллинга на мобильных устройствах
-        document.addEventListener('touchmove', function(event) {
-            event.preventDefault();
-        }, { passive: false });
+        // Функция для показа модального окна истории
+        function showHistory() {
+            document.getElementById('history-modal').style.visibility = 'visible';
+            document.getElementById('history-modal').style.opacity = 1;
+        }
 
-        // Функция, которая запускается при загрузке страницы
+        // Функция для скрытия модального окна истории
+        function hideHistory() {
+            document.getElementById('history-modal').style.visibility = 'hidden';
+            document.getElementById('history-modal').style.opacity = 0;
+        }
+
+        // Функция для добавления монет
+        function addCoins(amount) {
+            coinCount += amount;
+            document.getElementById('coin-count').textContent = coinCount;
+        }
+
+        // Функция для выполнения задания
+        function claimReward() {
+            // Открыть Telegram-канал в новом окне
+            window.open('https://t.me/your_channel', '_blank');
+
+            // Добавить монеты на баланс
+            addCoins(500);
+
+            // Изменить состояние кнопки
+            const claimButton = document.getElementById('claimButton');
+            claimButton.textContent = 'Claimed';
+            claimButton.disabled = true;
+        }
+
+        // Функции для переключения страниц
         function goHome() {
-            hideAll();
             document.getElementById('home').classList.remove('hidden');
-        }
-
-        function showTasks() {
-            hideAll();
-            document.getElementById('tasks').classList.remove('hidden');
-        }
-
-        function showFriends() {
-            hideAll();
-            document.getElementById('friends').classList.remove('hidden');
-        }
-
-        function showLeaderboard() {
-            hideAll();
-            document.getElementById('leaderboard').classList.remove('hidden');
-        }
-
-        function showBlackScreen() {
-            hideAll();
-            document.getElementById('black-screen').classList.remove('hidden');
-        }
-
-        function hideAll() {
-            document.getElementById('home').classList.add('hidden');
             document.getElementById('tasks').classList.add('hidden');
             document.getElementById('friends').classList.add('hidden');
             document.getElementById('leaderboard').classList.add('hidden');
             document.getElementById('black-screen').classList.add('hidden');
         }
+        function showTasks() {
+            document.getElementById('home').classList.add('hidden');
+            document.getElementById('tasks').classList.remove('hidden');
+            document.getElementById('friends').classList.add('hidden');
+            document.getElementById('leaderboard').classList.add('hidden');
+            document.getElementById('black-screen').classList.add('hidden');
+        }
+        function showFriends() {
+            document.getElementById('home').classList.add('hidden');
+            document.getElementById('tasks').classList.add('hidden');
+            document.getElementById('friends').classList.remove('hidden');
+            document.getElementById('leaderboard').classList.add('hidden');
+            document.getElementById('black-screen').classList.add('hidden');
+        }
+        function showLeaderboard() {
+            document.getElementById('home').classList.add('hidden');
+            document.getElementById('tasks').classList.add('hidden');
+            document.getElementById('friends').classList.add('hidden');
+            document.getElementById('leaderboard').classList.remove('hidden');
+            document.getElementById('black-screen').classList.add('hidden');
+        }
+        function showBlackScreen() {
+            document.getElementById('home').classList.add('hidden');
+            document.getElementById('tasks').classList.add('hidden');
+            document.getElementById('friends').classList.add('hidden');
+            document.getElementById('leaderboard').classList.add('hidden');
+            document.getElementById('black-screen').classList.remove('hidden');
+        }
 
-        // Функция для активации кнопки и изменения цвета иконки и текста
+        // Функция для активации кнопок
         function activateButton(button) {
             const buttons = document.querySelectorAll('.button');
             buttons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
         }
-
-        // Запуск при загрузке
-        window.onload = function() {
-            goHome(); // Показываем домашнюю страницу при загрузке
-            activateButton(document.getElementById('homeButton')); // Активируем кнопку "Дом"
-        };
     </script>
-
 </body>
 </html>
