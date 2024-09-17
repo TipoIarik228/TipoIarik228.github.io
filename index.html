@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Coin Game</title>
     <style>
+        /* Стили для всего документа и фон */
         body, html {
             height: 100%;
             margin: 0;
@@ -23,6 +24,7 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
+        /* Основное содержимое */
         .main-content {
             display: flex;
             flex-direction: column;
@@ -60,6 +62,7 @@
         .view-history:hover {
             color: white;
         }
+        /* Кнопки внизу экрана */
         .buttons {
             display: flex;
             justify-content: space-around;
@@ -101,6 +104,7 @@
         .hidden {
             display: none;
         }
+        /* Модальное окно истории */
         .history-modal {
             position: fixed;
             top: 0;
@@ -116,18 +120,25 @@
             visibility: hidden;
             opacity: 0;
             transition: visibility 0s, opacity 0.5s;
+            overflow: auto;
         }
         .history-content {
             background: rgba(0, 0, 0, 0.9);
             padding: 20px;
             border-radius: 8px;
             position: relative;
-            width: 80%;
-            max-width: 600px;
+            width: 90%;
+            max-width: 800px;
             text-align: center;
+            max-height: 80%;
+            overflow-y: auto;
         }
         .history-content h2 {
             margin-top: 0;
+            color: white;
+        }
+        .history-content p {
+            margin: 10px 0;
             color: white;
         }
         .close-btn {
@@ -139,54 +150,67 @@
             color: white;
             font-size: 24px;
             cursor: pointer;
+            padding: 0;
+            margin: 0;
+            z-index: 1001;
         }
- .task-box {
-    background: rgba(100, 100, 100, 0.9); /* Немного темнее для лучшего контраста */
-    width: 100%;
-    border-radius: 10px; /* Более округлые углы */
-    padding: 30px; /* Увеличенные отступы */
-    margin: 20px auto; /* Центрирование и отступы с краев */
-    max-width: 100%; /* Максимальная ширина для больших экранов */
-    text-align: start;
-    position: relative;
-    box-sizing: border-box;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* Добавление тени для объема */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.task-box h3 {
-    margin: 0;
-    font-size: 15px; /* Увеличенный размер шрифта заголовка */
-    color: white; /* Цвет заголовка для выделения */
-}
-.task-box p {
-    font-size: 20px; /* Увеличенный размер шрифта для описания */
-    margin: 10px 0;
-    color: #e0e0e0; /* Цвет текста для лучшей читаемости */
-}
-.claim-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 18px;
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-    transition: background-color 0.3s;
-}
-.claim-button:disabled {
-    background-color: gray;
-    cursor: not-allowed;
-}
-
+        .close-btn:hover {
+            color: #ccc;
+        }
+        .task-container {
+            width: 100%;
+            max-width: 600px;
+            background: #333;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .task-icon {
+            width: 40px;
+            height: 40px;
+            background: url('task1.png') no-repeat center;
+            background-size: contain;
+            margin-right: 15px;
+        }
+        .task-text {
+            flex-grow: 1;
+        }
+        .task-text h3 {
+            margin: 0;
+            font-size: 18px;
+            color: white;
+        }
+        .task-text p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: white;
+        }
+        .claim-button {
+            background: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-left: 20px;
+        }
+        .claim-button.claimed {
+            background: #6c757d;
+            cursor: default;
+        }
     </style>
 </head>
 <body>
-  <div id="home" class="main-content">
+
+    <!-- Основная страница с иконкой монеты и счетчиком -->
+    <div id="home" class="main-content">
         <div class="coin-icon"></div>
         <div class="coin-count">Coins: <span id="coin-count">0</span></div>
         <div class="view-history" onclick="showHistory()">View history</div>
@@ -195,10 +219,13 @@
     <!-- Страница с заданиями -->
     <div id="tasks" class="hidden">
         <h2>Tasks List</h2>
-        <div class="task-box">
-            <h3>Subscribe to the channel</h3>
-            <p>+500 ZEUS</p>
-            <button id="claimButton" class="claim-button" onclick="claimReward()">Claim</button>
+        <div class="task-container">
+            <div class="task-icon"></div>
+            <div class="task-text">
+                <h3>Subscribe to the channel</h3>
+                <p>+500 ZEUS</p>
+            </div>
+            <button class="claim-button" onclick="claimTask(this)">Claim</button>
         </div>
     </div>
 
@@ -243,47 +270,29 @@
 
     <!-- Модальное окно истории -->
     <div id="history-modal" class="history-modal">
-        <div class="history-content">
+        <div id="history-content" class="history-content">
             <button class="close-btn" onclick="hideHistory()">×</button>
-            <h2>History</h2>
-            <p>No history available.</p>
+            <!-- История будет обновляться динамически с помощью JavaScript -->
         </div>
     </div>
 
     <script async src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        let coinCount = 0; // Изначально монет 0
-
-        // Функция для показа модального окна истории
-        function showHistory() {
-            document.getElementById('history-modal').style.visibility = 'visible';
-            document.getElementById('history-modal').style.opacity = 1;
-        }
-
-        // Функция для скрытия модального окна истории
-        function hideHistory() {
-            document.getElementById('history-modal').style.visibility = 'hidden';
-            document.getElementById('history-modal').style.opacity = 0;
-        }
+        let coinCount = 0; // Инициализация переменной coinCount
+        let coinHistory = []; // История всех полученных монет
 
         // Функция для добавления монет
         function addCoins(amount) {
-            coinCount += amount;
-            document.getElementById('coin-count').textContent = coinCount;
+            coinCount += amount; // Увеличиваем количество монет
+            coinHistory.push(amount); // Добавляем сумму монет в историю
+            document.getElementById('coin-count').textContent = coinCount; // Обновляем отображение на странице
         }
 
-        // Функция для выполнения задания
-        function claimReward() {
-            // Открыть Telegram-канал в новом окне
-            window.open('https://t.me/your_channel', '_blank');
-
-            // Добавить монеты на баланс
-            addCoins(500);
-
-            // Изменить состояние кнопки
-            const claimButton = document.getElementById('claimButton');
-            claimButton.textContent = 'Claimed';
-            claimButton.disabled = true;
+        // Функция для активации кнопки
+        function activateButton(button) {
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
         }
 
         // Функции для переключения страниц
@@ -294,6 +303,7 @@
             document.getElementById('leaderboard').classList.add('hidden');
             document.getElementById('black-screen').classList.add('hidden');
         }
+
         function showTasks() {
             document.getElementById('home').classList.add('hidden');
             document.getElementById('tasks').classList.remove('hidden');
@@ -301,6 +311,7 @@
             document.getElementById('leaderboard').classList.add('hidden');
             document.getElementById('black-screen').classList.add('hidden');
         }
+
         function showFriends() {
             document.getElementById('home').classList.add('hidden');
             document.getElementById('tasks').classList.add('hidden');
@@ -308,6 +319,7 @@
             document.getElementById('leaderboard').classList.add('hidden');
             document.getElementById('black-screen').classList.add('hidden');
         }
+
         function showLeaderboard() {
             document.getElementById('home').classList.add('hidden');
             document.getElementById('tasks').classList.add('hidden');
@@ -315,6 +327,7 @@
             document.getElementById('leaderboard').classList.remove('hidden');
             document.getElementById('black-screen').classList.add('hidden');
         }
+
         function showBlackScreen() {
             document.getElementById('home').classList.add('hidden');
             document.getElementById('tasks').classList.add('hidden');
@@ -323,11 +336,38 @@
             document.getElementById('black-screen').classList.remove('hidden');
         }
 
-        // Функция для активации кнопок
-        function activateButton(button) {
-            const buttons = document.querySelectorAll('.button');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
+        // Функция для показа модального окна истории
+        function showHistory() {
+            const historyContent = document.getElementById('history-content');
+            let historyText = '<h2>History</h2>';
+
+            if (coinHistory.length === 0) {
+                historyText += '<p>No history available.</p>';
+            } else {
+                historyText += '<p>Coins earned:</p>';
+                coinHistory.forEach((amount, index) => {
+                    historyText += `<p>Earned ${amount} ZEUS (Task ${index + 1})</p>`;
+                });
+            }
+
+            historyContent.innerHTML = historyText;
+            document.getElementById('history-modal').style.visibility = 'visible';
+            document.getElementById('history-modal').style.opacity = 1;
+        }
+
+        // Функция для скрытия модального окна истории
+        function hideHistory() {
+            document.getElementById('history-modal').style.visibility = 'hidden';
+            document.getElementById('history-modal').style.opacity = 0;
+        }
+
+        // Функция для обработки кнопки "Claim" на заданиях
+        function claimTask(button) {
+            if (button.classList.contains('claimed')) return; // Если кнопка уже была нажата
+
+            button.classList.add('claimed');
+            addCoins(500); // Добавляем монеты на баланс
+            window.open('https://t.me/your_channel', '_blank'); // Открываем канал
         }
     </script>
 </body>
