@@ -5,21 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Coin Game</title>
     <style>
-        /* Стили остаются без изменений */
-        body, html {
-            height: 100%;
-            margin: 0;
-            background-color: black;
-            font-family: Arial, sans-serif;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            flex-direction: column;
-            align-items: center;
-            user-select: none;
-            touch-action: none;
-            overflow: hidden;
-        }
+    body, html {
+      height: 100%;
+     margin: 0;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+      touch-action: none;
+      overflow: hidden;
+      background-image: url('background.png'); /* Замените на URL вашего изображения */
+      background-size: 100% 100%; /* Растягивает фон на весь экран */
+      background-position: center; /* Центрирование фона */
+      background-repeat: no-repeat; /* Отключение повторения фона */
+      background-attachment: fixed; /* Фиксирует фон на месте */
+       }
         .main-content {
             display: flex;
             flex-direction: column;
@@ -36,7 +39,7 @@
             background: url('coin.png') no-repeat center;
             background-size: contain;
             margin-bottom: 20px;
-            margin-top: -300px;
+            margin-top: -150px;
         }
         .coin-count {
             font-size: 36px;
@@ -44,14 +47,15 @@
             margin-bottom: 40px;
         }
         .buttons {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            position: fixed;
-            bottom: 0;
-            padding: 10px; /* Уменьшил отступ для лучшего соответствия размерам кнопок */
-            background-color: black;
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+       padding: 10px;
+        background-color: transparent; /* Сделайте фон прозрачным */
         }
+
         .button {
             background-color: transparent;
             border: none;
@@ -84,31 +88,6 @@
         .hidden {
             display: none;
         }
-        /* Новый CSS для кнопки Claim и уведомлений */
-        .claim-btn {
-            background-color: #007bff; /* Синий цвет кнопки */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #333;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            display: none;
-            z-index: 1000;
-        }
-        .notification .icon {
-            margin-right: 10px;
-        }
     </style>
 </head>
 <body>
@@ -122,11 +101,6 @@
     <!-- Страница с заданиями -->
     <div id="tasks" class="hidden">
         <h2>Tasks List</h2>
-        <div class="task-item">
-            <span>Subscribe to channel</span>
-            <span class="task-reward">+500 ZEUS</span>
-            <button id="join-btn" class="claim-btn">Join</button>
-        </div>
     </div>
 
     <!-- Страница с приглашенными друзьями -->
@@ -167,98 +141,23 @@
             <span class="button-label"><b>Wallet</b></span>
         </button>
     </div>
-
-    <!-- Уведомление -->
-    <div id="notification" class="notification">
-        <span class="icon"></span><span id="notification-message"></span>
-    </div>
-
     <script async src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        let coinCount = 0;
-        let isSubscribed = JSON.parse(localStorage.getItem('isSubscribed')) || false;
-
         // Проверяем наличие Telegram WebApp API после загрузки скрипта
         window.addEventListener('load', () => {
             if (window.Telegram && window.Telegram.WebApp) {
-                const user = window.Telegram.WebApp.initDataUnsafe.user;
-                const hasPremium = user.is_premium || false;
-
-                if (hasPremium) {
-                    document.getElementById('coin-count').textContent = '2000';
-                    coinCount = 2000;
-                } else {
-                    document.getElementById('coin-count').textContent = '500';
-                    coinCount = 500;
-                }
-
                 window.Telegram.WebApp.ready();
                 window.Telegram.WebApp.expand(); // Попробуйте расширить приложение на весь экран
-                window.Telegram.WebApp.setHeaderColor("#000000"); // может переключать между светлой и темной темой
-
-                // Обновляем состояние подписки и текст кнопки
-                handleJoinButton();
+              window.Telegram.WebApp.setHeaderColor("#000000"); // может переключать между светлой и темной темой
             } else {
                 console.error("Telegram WebApp не обнаружен.");
             }
-
-            goHome();
         });
 
-        // Функция для активации кнопки и изменения цвета иконки и текста
-        function activateButton(button) {
-            const buttons = document.querySelectorAll('.button');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-        }
-
-        // Функция для показа уведомлений
-        function showNotification(message, type) {
-            const notification = document.getElementById('notification');
-            const notificationMessage = document.getElementById('notification-message');
-            const icon = document.querySelector('.notification .icon');
-
-            notificationMessage.textContent = message;
-            if (type === 'success') {
-                notification.classList.add('success');
-                notification.classList.remove('fail');
-                icon.textContent = '✔️'; // Иконка для успеха
-            } else if (type === 'fail') {
-                notification.classList.add('fail');
-                notification.classList.remove('success');
-                icon.textContent = '❌'; // Иконка для ошибки
-            }
-
-            notification.style.display = 'block';
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 5000);
-        }
-
-        // Функция для обработки подписки и кнопки Join/Claim
-        function handleJoinButton() {
-            const joinButton = document.getElementById('join-btn');
-
-            if (isSubscribed) {
-                joinButton.textContent = 'Claim';
-            } else {
-                joinButton.textContent = 'Join';
-            }
-
-            joinButton.addEventListener('click', () => {
-                if (!isSubscribed) {
-                    // Перенаправляем на канал Telegram
-                    window.location.href = 'https://t.me/starsmajor'; // Замените на ваш канал
-                } else {
-                    // Добавляем 500 монет на баланс
-                    coinCount += 500;
-                    document.getElementById('coin-count').textContent = coinCount;
-
-                    // Показываем сообщение об успешной подписке
-                    handleSuccessfulSubscription(); // Используем функцию для обработки успешной подписки
-                }
-            });
-        }
+        // Отключение скроллинга на мобильных устройствах
+        document.addEventListener('touchmove', function(event) {
+            event.preventDefault();
+        }, { passive: false });
 
         // Функция, которая запускается при загрузке страницы
         function goHome() {
@@ -269,7 +168,6 @@
         function showTasks() {
             hideAll();
             document.getElementById('tasks').classList.remove('hidden');
-            handleJoinButton(); // Обрабатываем кнопку Join/Claim при показе Tasks
         }
 
         function showFriends() {
@@ -295,31 +193,18 @@
             document.getElementById('black-screen').classList.add('hidden');
         }
 
+        // Функция для активации кнопки и изменения цвета иконки и текста
+        function activateButton(button) {
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        }
+
         // Запуск при загрузке
         window.onload = function() {
             goHome(); // Показываем домашнюю страницу при загрузке
             activateButton(document.getElementById('homeButton')); // Активируем кнопку "Дом"
         };
-
-        // Обработка состояния подписки при переходе на страницу и возвращении
-        window.addEventListener('pageshow', (event) => {
-            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-                handleJoinButton(); // Обновляем текст кнопки при возврате на страницу
-            }
-        });
-
-        // Функция для установки подписки
-        function setSubscribed() {
-            isSubscribed = true;
-            localStorage.setItem('isSubscribed', JSON.stringify(isSubscribed));
-        }
-
-        // Функция обработки успешной подписки
-        function handleSuccessfulSubscription() {
-            setSubscribed();
-            showNotification('Subscription Successful! You have received +500 ZEUS.', 'success');
-            handleJoinButton(); // Обновляем кнопку после успешной подписки
-        }
     </script>
 
 </body>
