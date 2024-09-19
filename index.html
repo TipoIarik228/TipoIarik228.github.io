@@ -39,21 +39,18 @@
         }
 
         .coin-icon {
-            width: 300px;
-            height: 300px;
             background: url('coin.png') no-repeat center;
             background-size: contain;
             margin-bottom: 20px;
-            margin-top: -20vh;
+            margin-top: -30vh;
         }
 
         .coin-count {
-            font-size: 5vw;
+            font-size: 3vw;
             font-weight: bold;
             text-align: center;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-            letter-spacing: 1px;
             color: white;
         }
 
@@ -106,6 +103,9 @@
         .hidden {
             display: none;
         }
+        h2{
+          text-align: center;
+        }
 
         .task-container {
             width: 100%;
@@ -131,6 +131,7 @@
 
         .task-text {
             flex-grow: 1;
+            color: #007bff;
         }
 
         .task-text h3 {
@@ -142,7 +143,7 @@
         .task-text p {
             margin: 5px 0 0;
             font-size: 14px;
-            color: white;
+            color: #007bff;
         }
 
         .claim-button {
@@ -160,8 +161,8 @@
         /* Адаптивный дизайн для мобильных устройств */
         @media (max-width: 600px) {
             .coin-icon {
-                width: 100px;
-                height: 100px;
+                width: 20vh;
+                height: 20vh;
             }
 
             .coin-count {
@@ -208,7 +209,7 @@
             <div class="task-icon"></div>
             <div class="task-text">
                 <h3>Subscribe to the channel</h3>
-                <p>+500 ZEUS</p>
+              <p><b>+500 ZEUS</b></p>
             </div>
             <button class="claim-button" onclick="claimTask(this)">Claim</button>
         </div>
