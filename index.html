@@ -19,12 +19,11 @@
             touch-action: none;
             overflow: hidden;
             background-image: url('background_img.png');
-            background-size: cover;
+            background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
-
         /* Основное содержимое */
         .main-content {
             display: flex;
@@ -35,40 +34,34 @@
             width: 100%;
             position: relative;
             overflow: hidden;
-            padding: 20px;
         }
-
         .coin-icon {
-            background: url('coin.png') no-repeat center;
-            background-size: contain;
-            margin-bottom: 20px;
-            margin-top: -30vh;
+            margin-bottom: 15px;
+            margin-top: -150px;
         }
-
         .coin-count {
-            font-size: 3vw;
+            font-size: 9vw;
             font-weight: bold;
             text-align: center;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            letter-spacing: 1px;
             color: white;
         }
-
         /* Кнопки внизу экрана */
         .buttons {
             display: flex;
             justify-content: space-around;
             width: 100%;
             position: fixed;
-            bottom: 1vh;
+            bottom: 0;
             padding: 10px;
             background-color: transparent;
         }
-
         .button {
             background-color: transparent;
             border: none;
-            width: 50px;
+            width: 60px;
             height: 70px;
             cursor: pointer;
             display: flex;
@@ -76,121 +69,68 @@
             justify-content: center;
             align-items: center;
         }
-
         .button img {
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             filter: brightness(0.7);
             transition: filter 0.2s ease;
         }
-
         .button-label {
             font-size: 10px;
             color: rgba(255, 255, 255, 0.6);
             margin-top: 5px;
             transition: color 0.2s ease;
-            text-align: center;
         }
-
         .button.active img {
             filter: brightness(1);
         }
-
         .button.active .button-label {
             color: white;
         }
-
         .hidden {
             display: none;
         }
         h2{
           text-align: center;
         }
-
         .task-container {
-            width: 100%;
-            max-width: 600px;
+            width: 97vw;
             background: #333;
             border-radius: 8px;
-            padding: 20px;
+            padding: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 20px auto;
+            margin: 10px auto;
             box-sizing: border-box;
             text-align: center;
         }
-
         .task-icon {
-            width: 50px;
-            height: 50px;
-            background: url('task1.png') no-repeat center;
-            background-size: contain;
-            margin-right: 10px;
+            margin-right: 15px;
         }
-
         .task-text {
             flex-grow: 1;
-            color: #007bff;
         }
-
         .task-text h3 {
             margin: 0;
-            font-size: 16px;
+            font-size: 4vw;
             color: white;
         }
-
         .task-text p {
             margin: 5px 0 0;
-            font-size: 14px;
-            color: #007bff;
+            font-size: 3.5vw;
+            color: dodgerblue;
         }
-
         .claim-button {
             background: #007bff;
             border: none;
             border-radius: 4px;
             color: white;
-            font-size: 16px;
-            padding: 10px 10px;
+            font-size: 3.5vw;
+            padding: 10px 15px;
             cursor: pointer;
             transition: background 0.3s;
-            margin-left: 20px;
-        }
-
-        /* Адаптивный дизайн для мобильных устройств */
-        @media (max-width: 600px) {
-            .coin-icon {
-                width: 25vh;
-                height: 25vh;
-            }
-
-            .coin-count {
-                font-size: 9vw;
-            }
-
-            .task-container {
-                padding: 10px;
-            }
-
-            .claim-button {
-                padding: 10px 16px;
-                font-size: 13px;
-            }
-
-            .buttons {
-                padding: 5px;
-            }
-
-            .button {
-                width: 60px;
-                height: 60px;
-            }
-
-            .button img {
-                width: 30px;
-                height: 30px;
-            }
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -198,7 +138,9 @@
 
     <!-- Основная страница с иконкой монеты и счетчиком -->
     <div id="home" class="main-content">
-        <div class="coin-icon"></div>
+        <div class="coin-icon">
+          <img src="coin.png"  alt="coin" width="200vw">
+        </div>
         <div class="coin-count">Zeus Points: <span id="coin-count">0</span></div>
     </div>
 
@@ -206,7 +148,9 @@
     <div id="tasks" class="hidden">
         <h2>Tasks List</h2>
         <div class="task-container">
-            <div class="task-icon"></div>
+            <div class="task-icon">
+              <img  src="task1.png" width="45vw" alt="task_icon">
+            </div>
             <div class="task-text">
                 <h3>Subscribe to the channel</h3>
               <p><b>+500 ZEUS</b></p>
@@ -249,20 +193,37 @@
             <span class="button-label"><b>Leaderboard</b></span>
         </button>
         <button class="button" onclick="activateButton(this); showBlackScreen();">
-            <img src="wallet_icon.png" alt="Wallet">
+            <img src="wallet_icon.png" alt="Black Screen">
             <span class="button-label"><b>Wallet</b></span>
         </button>
     </div>
 
     <script async src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+
+        window.addEventListener('load', () => {
+    if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
+
+        // Установка светлой или темной темы для шапки
+        window.Telegram.WebApp.setHeaderColor("#000000  "); // "bg_color" для переключения темы
+    } else {
+        console.error("Telegram WebApp не обнаружен.");
+    }
+});
+
+              // Запуск при загрузке
+        window.onload = function() {
+            goHome();
+            activateButton(document.getElementById('homeButton'));
+        };
+
         let coinCount = 0; // Инициализация переменной coinCount
-        let coinHistory = []; // История всех полученных монет
 
         // Функция для добавления монет
         function addCoins(amount) {
             coinCount += amount; // Увеличиваем количество монет
-            coinHistory.push(amount); // Добавляем сумму монет в историю
             document.getElementById('coin-count').textContent = coinCount; // Обновляем отображение на странице
         }
 
@@ -314,12 +275,13 @@
             document.getElementById('black-screen').classList.remove('hidden');
         }
 
-        // Функция для задания и получения монет
+        // Функция для обработки кнопки "Claim" на заданиях
         function claimTask(button) {
-            addCoins(500); // Добавляем 500 ZEUS монет
-            button.textContent = 'Claimed';
-            button.disabled = true;
-            button.style.backgroundColor = 'grey';
+            if (button.classList.contains('claimed')) return; // Если кнопка уже была нажата
+
+            button.classList.add('claimed');
+            addCoins(500); // Добавляем монеты на баланс
+            window.open('https://t.me/your_channel', '_blank'); // Открываем канал
         }
     </script>
 </body>
