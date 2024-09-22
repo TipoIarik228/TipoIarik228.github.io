@@ -29,7 +29,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: start;
             flex-grow: 1;
             width: 100%;
             position: relative;
@@ -37,7 +37,7 @@
         }
         .coin-icon {
             margin-bottom: 15px;
-            margin-top: -150px;
+            margin-top: 150px;
         }
         .coin-count {
             font-size: 7vw;
@@ -52,7 +52,7 @@
         .buttons {
             display: flex;
             justify-content: space-around;
-            width: 99%;
+            width: 100%;
             position: fixed;
             bottom: 0;
             padding: 10px;
@@ -90,8 +90,8 @@
         .hidden {
             display: none;
         }
-        h2{
-          text-align: center;
+        h2 {
+            text-align: center;
         }
         .task-container {
             width: 97vw;
@@ -131,7 +131,90 @@
             cursor: pointer;
             transition: background 0.3s;
             margin-left: 10px;
+            position: relative;
+            width: 17vw;
+            height: 5vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        /* Стили для анимации загрузки */
+        .loading {
+            position: relative;
+        }
+        .loading:before {
+            content: '';
+            box-sizing: border-box;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin-top: -10px;
+            margin-left: -10px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Неактивная кнопка */
+        .claimed {
+            background-color: gray !important;
+            cursor: not-allowed;
+        }
+        /* Кнопка приглашения */
+        .invite-button-container {
+            width: 97vw;
+            position: fixed;
+            bottom: 100px; /* Отступ от нижней части экрана */
+            padding: 0 10px; /* Отступы по бокам */
+        }
+        .invite-button {
+            width: 97vw;
+            background-color: white;
+            color: black;
+            font-size: 4vw; /* Размер текста */
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .invite-button:hover {
+            background-color: #f0f0f0; /* Цвет при наведении */
+        }
+        .invite-text {
+    font-size: 5vw; /* Размер текста */
+          width: 70vw;
+    color: rgba(255, 255, 255, 0.6); /* Серый цвет */
+    text-align: center; /* Центрирование текста */
+    margin-bottom: 20px; /* Отступ снизу */
+}
+.invited-friends {
+    width: 90vw;
+    height: 45vh;
+    justify-items: center;
+    margin-top: 15px; /* Отступ сверху */
+    font-size: 5vw; /* Размер текста */
+    border-radius: 40px;
+    background-color: #555; /* Серый цвет */
+    border: #222222 solid 5px;
+    color: white; /* Цвет текста */
+    padding: 10px; /* Внутренние отступы */
+    text-align: center; /* Центрирование текста */
+}
+.invited-friends p{
+  margin-top: 10px;
+  font-size: 25px;
+}
+#invited-count{
+  font-size: 55vw;
+}
     </style>
 </head>
 <body>
@@ -139,38 +222,50 @@
     <!-- Основная страница с иконкой монеты и счетчиком -->
     <div id="home" class="main-content">
         <div class="coin-icon">
-          <img src="coin.png"  alt="coin" width="160vw">
+            <img src="coin.png" alt="coin" width="160vw">
         </div>
         <div class="coin-count">Zeus Points: <span id="coin-count">0</span></div>
     </div>
 
     <!-- Страница с заданиями -->
-    <div id="tasks" class="hidden">
+    <div id="tasks" class="main-content hidden">
         <h2>Tasks List</h2>
         <div class="task-container">
             <div class="task-icon">
-              <img  src="task1.png" width="45vw" alt="task_icon">
+                <img src="task1.png" width="45vw" alt="task_icon">
             </div>
             <div class="task-text">
                 <h3>Subscribe to the channel</h3>
-              <p><b>+500 ZEUS</b></p>
+                <p><b>+500 ZEUS</b></p>
             </div>
             <button class="claim-button" onclick="claimTask(this)">Claim</button>
         </div>
     </div>
 
-    <!-- Страница с приглашенными друзьями -->
-    <div id="friends" class="hidden">
-        <h2>Invited Friends</h2>
+<!-- Страница с приглашенными друзьями -->
+<div id="friends" class="main-content hidden">
+    <h2>Invite Friends</h2>
+<div class="invite-text">
+    <b>Invite your friends to get more Zeus Points💰</b>
+</div>
+<div class="points-container">
+    <div class="invited-friends">
+      <span id="invited-count">0</span><p><b>Friends Invited</b></p>
     </div>
+</div>
+<div class="invite-button-container">
+    <button class="invite-button" onclick="inviteFriends()"><b>Invite Friends</b></button>
+</div>
+</div>
+
 
     <!-- Страница с таблицей лидеров -->
-    <div id="leaderboard" class="hidden">
+    <div id="leaderboard" class="main-content hidden">
         <h2>Leaderboard</h2>
     </div>
 
     <!-- Черный экран -->
-    <div id="black-screen" class="hidden">
+    <div id="black-screen" class="main-content hidden">
         <h2>Connect wallet</h2>
     </div>
 
@@ -198,91 +293,139 @@
         </button>
     </div>
 
-    <script async src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>
+<script async src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+    window.addEventListener('load', () => {
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+            window.Telegram.WebApp.setHeaderColor("#000000");
+        } else {
+            console.error("Telegram WebApp не обнаружен.");
+        }
 
-        window.addEventListener('load', () => {
-    if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.ready();
-        window.Telegram.WebApp.expand();
+        // Загружаем количество монет и состояние задания из localStorage при загрузке страницы
+        loadCoins();
+    });
 
-        // Установка светлой или темной темы для шапки
-        window.Telegram.WebApp.setHeaderColor("#000000  "); // "bg_color" для переключения темы
-    } else {
-        console.error("Telegram WebApp не обнаружен.");
+    window.onload = function() {
+        goHome();
+        activateButton(document.getElementById('homeButton'));
+    };
+
+    let coinCount = 0; // Инициализация переменной coinCount
+
+    // Функция для загрузки количества монет и состояния задания
+    function loadCoins() {
+        const savedCoins = localStorage.getItem('coinCount');
+        if (savedCoins) {
+            coinCount = parseInt(savedCoins, 10); // Преобразуем строку в число
+        }
+        document.getElementById('coin-count').textContent = coinCount; // Обновляем отображение на странице
+
+        // Проверяем, было ли уже выполнено задание
+        const taskClaimed = localStorage.getItem('taskClaimed');
+        if (taskClaimed === 'true') {
+            const claimButton = document.querySelector('.claim-button');
+            claimButton.classList.add('claimed');
+            claimButton.textContent = 'Claimed';
+            claimButton.disabled = true; // Делаем кнопку неактивной
+        }
     }
-});
 
-              // Запуск при загрузке
-        window.onload = function() {
-            goHome();
-            activateButton(document.getElementById('homeButton'));
-        };
+    // Функция для добавления монет и сохранения в localStorage
+    function addCoins(amount) {
+        coinCount += amount; // Увеличиваем количество монет
+        localStorage.setItem('coinCount', coinCount); // Сохраняем в localStorage
+        document.getElementById('coin-count').textContent = coinCount; // Обновляем отображение на странице
+    }
 
-        let coinCount = 0; // Инициализация переменной coinCount
+    // Функция для активации кнопки
+    function activateButton(button) {
+        const buttons = document.querySelectorAll('.button');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+    }
 
-        // Функция для добавления монет
-        function addCoins(amount) {
-            coinCount += amount; // Увеличиваем количество монет
-            document.getElementById('coin-count').textContent = coinCount; // Обновляем отображение на странице
-        }
+    // Функции для навигации между страницами
+    function goHome() {
+        hideAllPages();
+        document.getElementById('home').classList.remove('hidden');
+    }
 
-        // Функция для активации кнопки
-        function activateButton(button) {
-            const buttons = document.querySelectorAll('.button');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-        }
+    function showTasks() {
+        hideAllPages();
+        document.getElementById('tasks').classList.remove('hidden');
+    }
 
-        // Функции для переключения страниц
-        function goHome() {
-            document.getElementById('home').classList.remove('hidden');
-            document.getElementById('tasks').classList.add('hidden');
-            document.getElementById('friends').classList.add('hidden');
-            document.getElementById('leaderboard').classList.add('hidden');
-            document.getElementById('black-screen').classList.add('hidden');
-        }
+    function showFriends() {
+        hideAllPages();
+        document.getElementById('friends').classList.remove('hidden');
+    }
 
-        function showTasks() {
-            document.getElementById('home').classList.add('hidden');
-            document.getElementById('tasks').classList.remove('hidden');
-            document.getElementById('friends').classList.add('hidden');
-            document.getElementById('leaderboard').classList.add('hidden');
-            document.getElementById('black-screen').classList.add('hidden');
-        }
+    function showLeaderboard() {
+        hideAllPages();
+        document.getElementById('leaderboard').classList.remove('hidden');
+    }
 
-        function showFriends() {
-            document.getElementById('home').classList.add('hidden');
-            document.getElementById('tasks').classList.add('hidden');
-            document.getElementById('friends').classList.remove('hidden');
-            document.getElementById('leaderboard').classList.add('hidden');
-            document.getElementById('black-screen').classList.add('hidden');
-        }
+    function showBlackScreen() {
+        hideAllPages();
+        document.getElementById('black-screen').classList.remove('hidden');
+    }
 
-        function showLeaderboard() {
-            document.getElementById('home').classList.add('hidden');
-            document.getElementById('tasks').classList.add('hidden');
-            document.getElementById('friends').classList.add('hidden');
-            document.getElementById('leaderboard').classList.remove('hidden');
-            document.getElementById('black-screen').classList.add('hidden');
-        }
+    function hideAllPages() {
+        const pages = document.querySelectorAll('.main-content');
+        pages.forEach(page => page.classList.add('hidden'));
+    }
 
-        function showBlackScreen() {
-            document.getElementById('home').classList.add('hidden');
-            document.getElementById('tasks').classList.add('hidden');
-            document.getElementById('friends').classList.add('hidden');
-            document.getElementById('leaderboard').classList.add('hidden');
-            document.getElementById('black-screen').classList.remove('hidden');
-        }
+    // Функция для обработки нажатия на кнопку "Claim"
+    function claimTask(button) {
+        if (button.classList.contains('claimed')) return; // Проверяем, было ли уже получено вознаграждение
 
-        // Функция для обработки кнопки "Claim" на заданиях
-        function claimTask(button) {
-            if (button.classList.contains('claimed')) return; // Если кнопка уже была нажата
+        button.classList.add('loading'); // Добавляем класс загрузки
+        button.textContent = ''; // Очищаем текст во время загрузки
 
-            button.classList.add('claimed');
-            addCoins(500); // Добавляем монеты на баланс
-            window.open('https://t.me/your_channel', '_blank'); // Открываем канал
-        }
-    </script>
+        // Перенаправление в Telegram-канал
+        window.open('https://t.me/hamster_kombat', '_blank'); // Замените your_channel_name на имя вашего канала
+
+        // Ставим задержку на 5 секунд, чтобы эмулировать анимацию загрузки
+        setTimeout(() => {
+            button.classList.remove('loading'); // Убираем анимацию загрузки
+            button.classList.add('claimed'); // Добавляем стиль "Claimed"
+            button.textContent = 'Claimed'; // Меняем текст на "Claimed"
+            button.disabled = true; // Отключаем кнопку
+
+            addCoins(500); // Добавляем 500 монет на баланс
+
+            // Сохраняем состояние задания
+            localStorage.setItem('taskClaimed', 'true');
+        }, 5000); // Устанавливаем задержку в 5000 миллисекунд (5 секунд)
+    }
+
+let invitedCount = 0; // Инициализация переменной для приглашенных друзей
+
+// Функция для обработки нажатия на кнопку "Invite Friends"
+function inviteFriends() {
+    invitedCount++; // Увеличиваем счетчик приглашенных
+    document.getElementById('invited-count').textContent = invitedCount; // Обновляем отображение
+
+    // Здесь вы можете создать свою ссылку для приглашения
+    const inviteLink = "t.me/Zeuscoins_bot"; // Замените на свою ссылку
+    const text = `Join me in this awesome game! ${inviteLink}`;
+
+    // Используем API Telegram для обмена ссылкой
+    if (navigator.share) {
+        navigator.share({
+            title: 'Invite Friends',
+            text: text,
+            url: inviteLink
+        }).catch(console.error);
+    } else {
+        alert("Copy this link to invite your friends: " + inviteLink);
+    }
+}
+
+</script>
+
 </body>
 </html>
