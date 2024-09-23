@@ -113,12 +113,12 @@
         }
         .task-text h3 {
             margin: 0;
-            font-size: 4vw;
+            font-size: 3.6vw;
             color: white;
         }
         .task-text p {
             margin: 5px 0 0;
-            font-size: 3.5vw;
+            font-size: 3.2vw;
             color: dodgerblue;
         }
         .claim-button {
@@ -189,31 +189,30 @@
             background-color: #f0f0f0; /* Цвет при наведении */
         }
         .invite-text {
-            font-size: 5vw; /* Размер текста */
+            font-size: 4vw; /* Размер текста */
             width: 70vw;
             color: rgba(255, 255, 255, 0.6); /* Серый цвет */
             text-align: center; /* Центрирование текста */
             margin-bottom: 20px; /* Отступ снизу */
         }
-        .invited-friends {
-            width: 90vw;
-            height: 45vh;
+        .points-container{
             justify-items: center;
             margin-top: 15px; /* Отступ сверху */
             font-size: 5vw; /* Размер текста */
-            border-radius: 40px;
-            background-color: #555; /* Серый цвет */
-            border: #222222 solid 5px;
             color: white; /* Цвет текста */
             padding: 10px; /* Внутренние отступы */
             text-align: center; /* Центрирование текста */
+        }
+
+        .invited-friends {
+
         }
         .invited-friends p{
             margin-top: 10px;
             font-size: 25px;
         }
         #invited-count{
-            font-size: 55vw;
+            font-size: 40vw;
         }
     </style>
 </head>
@@ -244,7 +243,7 @@
 
     <!-- Страница с приглашенными друзьями -->
     <div id="friends" class="main-content hidden">
-        <h2>Invite Friends</h2>
+        <h2>Friends</h2>
         <div class="invite-text">
             <b>Invite your friends to get more Zeus Points💰</b>
         </div>
@@ -438,7 +437,7 @@
     function inviteFriends() {
         // Создаем уникальную ссылку с вашим userId
         const inviteLink = `https://t.me/Zeuscoins_bot/Zeus?ref=${userId}`;
-        const text = `Join me in this awesome game! ${inviteLink}`;
+        const text = `Join me in this awesome game!`;
 
         // Используем API Telegram для обмена ссылкой
         if (navigator.share) {
