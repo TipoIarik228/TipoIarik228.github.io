@@ -203,17 +203,13 @@
             padding: 10px; /* Внутренние отступы */
             text-align: center; /* Центрирование текста */
         }
-
-        .invited-friends {
-
-        }
         .invited-friends p{
             margin-top: 10px;
             font-size: 25px;
         }
         #invited-count{
           font-size: 40vw;
-          text-shadow: 1px 1px 60px #f0f0f0;
+          text-shadow: 1px 1px 20px #f0f0f0;
         }
     </style>
 </head>
@@ -287,7 +283,7 @@
             <span class="button-label"><b>Leaderboard</b></span>
         </button>
         <button class="button" onclick="activateButton(this); showBlackScreen();">
-            <img src="wallet_icon.png" alt="Black Screen">
+            <img src="wallet_icon.png" alt="Wallet">
             <span class="button-label"><b>Wallet</b></span>
         </button>
     </div>
@@ -295,162 +291,163 @@
 <script async src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
     window.addEventListener('load', () => {
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
-            window.Telegram.WebApp.setHeaderColor("#000000");
-        } else {
-            console.error("Telegram WebApp не обнаружен.");
-        }
-
-        // Загружаем количество монет и состояние задания из localStorage при загрузке страницы
-        loadCoins();
-    });
-
-    let coinCount = 0; // Инициализация переменной coinCount
-    let invitedCount = 0; // Инициализация переменной для приглашенных друзей
-
-    // Генерируем или получаем уникальный идентификатор пользователя
-    let userId = localStorage.getItem('userId');
-    if (!userId) {
-        userId = 'user_' + Date.now();
-        localStorage.setItem('userId', userId);
+    if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
+        window.Telegram.WebApp.setHeaderColor("#000000");
+    } else {
+        console.error("Telegram WebApp не обнаружен.");
     }
 
-    window.onload = function() {
-        // Обработка реферального параметра
-        const urlParams = new URLSearchParams(window.location.search);
-        const refId = urlParams.get('ref');
+    // Загружаем количество монет и состояние задания из localStorage при загрузке страницы
+    loadCoins();
+});
 
-        // Если есть реферальный идентификатор и он не равен нашему собственному
-        if (refId && refId !== userId) {
-            let referrals = JSON.parse(localStorage.getItem('referrals')) || [];
+let coinCount = 0; // Инициализация переменной coinCount
+let invitedCount = 0; // Инициализация переменной для приглашенных друзей
 
-            if (!referrals.includes(refId)) {
-                // Увеличиваем счетчик приглашенных друзей
-                invitedCount = parseInt(localStorage.getItem('invitedCount')) || 0;
-                invitedCount++;
-                localStorage.setItem('invitedCount', invitedCount);
-                document.getElementById('invited-count').textContent = invitedCount;
+// Генерируем или получаем уникальный идентификатор пользователя
+let userId = localStorage.getItem('userId');
+if (!userId) {
+    userId = 'user_' + Date.now();
+    localStorage.setItem('userId', userId);
+}
 
-                // Сохраняем список обработанных рефералов
-                referrals.push(refId);
-                localStorage.setItem('referrals', JSON.stringify(referrals));
-            }
-        } else {
-            // Загружаем счетчик приглашенных друзей из localStorage
+window.onload = function() {
+    // Обработка реферального параметра
+    const urlParams = new URLSearchParams(window.location.search);
+    const refId = urlParams.get('ref');
+
+    // Если есть реферальный идентификатор и он не равен нашему собственному
+    if (refId && refId !== userId) {
+        let referrals = JSON.parse(localStorage.getItem('referrals')) || [];
+
+        if (!referrals.includes(refId)) {
+            // Увеличиваем счетчик приглашенных друзей
             invitedCount = parseInt(localStorage.getItem('invitedCount')) || 0;
+            invitedCount++;
+            localStorage.setItem('invitedCount', invitedCount);
             document.getElementById('invited-count').textContent = invitedCount;
+
+            // Сохраняем список обработанных рефералов
+            referrals.push(refId);
+            localStorage.setItem('referrals', JSON.stringify(referrals));
+
         }
-
-        goHome();
-        activateButton(document.getElementById('homeButton'));
-    };
-
-    // Функция для загрузки количества монет и состояния задания
-    function loadCoins() {
-        const savedCoins = localStorage.getItem('coinCount');
-        if (savedCoins) {
-            coinCount = parseInt(savedCoins, 10); // Преобразуем строку в число
-        }
-        document.getElementById('coin-count').textContent = coinCount; // Обновляем отображение на странице
-
-        // Проверяем, было ли уже выполнено задание
-        const taskClaimed = localStorage.getItem('taskClaimed');
-        if (taskClaimed === 'true') {
-            const claimButton = document.querySelector('.claim-button');
-            claimButton.classList.add('claimed');
-            claimButton.textContent = 'Claimed';
-            claimButton.disabled = true; // Делаем кнопку неактивной
-        }
+    } else {
+        // Загружаем счетчик приглашенных друзей из localStorage
+        invitedCount = parseInt(localStorage.getItem('invitedCount')) || 0;
+        document.getElementById('invited-count').textContent = invitedCount;
     }
 
-    // Функция для добавления монет и сохранения в localStorage
-    function addCoins(amount) {
-        coinCount += amount; // Увеличиваем количество монет
-        localStorage.setItem('coinCount', coinCount); // Сохраняем в localStorage
-        document.getElementById('coin-count').textContent = coinCount; // Обновляем отображение на странице
+    goHome();
+    activateButton(document.getElementById('homeButton'));
+};
+
+// Функция для загрузки количества монет и состояния задания
+function loadCoins() {
+    const savedCoins = localStorage.getItem('coinCount');
+    if (savedCoins) {
+        coinCount = parseInt(savedCoins, 10); // Преобразуем строку в число
     }
+    document.getElementById('coin-count').textContent = coinCount; // Обновляем отображение на странице
 
-    // Функция для активации кнопки
-    function activateButton(button) {
-        const buttons = document.querySelectorAll('.button');
-        buttons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
+    // Проверяем, было ли уже выполнено задание
+    const taskClaimed = localStorage.getItem('taskClaimed');
+    if (taskClaimed === 'true') {
+        const claimButton = document.querySelector('.claim-button');
+        claimButton.classList.add('claimed');
+        claimButton.textContent = 'Claimed';
+        claimButton.disabled = true; // Делаем кнопку неактивной
     }
+}
 
-    // Функции для навигации между страницами
-    function goHome() {
-        hideAllPages();
-        document.getElementById('home').classList.remove('hidden');
+// Функция для добавления монет и сохранения в localStorage
+function addCoins(amount) {
+    coinCount += amount; // Увеличиваем количество монет
+    localStorage.setItem('coinCount', coinCount); // Сохраняем в localStorage
+    document.getElementById('coin-count').textContent = coinCount; // Обновляем отображение на странице
+}
+
+// Функция для активации кнопки
+function activateButton(button) {
+    const buttons = document.querySelectorAll('.button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+}
+
+// Функции для навигации между страницами
+function goHome() {
+    hideAllPages();
+    document.getElementById('home').classList.remove('hidden');
+}
+
+function showTasks() {
+    hideAllPages();
+    document.getElementById('tasks').classList.remove('hidden');
+}
+
+function showFriends() {
+    hideAllPages();
+    document.getElementById('friends').classList.remove('hidden');
+}
+
+function showLeaderboard() {
+    hideAllPages();
+    document.getElementById('leaderboard').classList.remove('hidden');
+}
+
+function showBlackScreen() {
+    hideAllPages();
+    document.getElementById('black-screen').classList.remove('hidden');
+}
+
+function hideAllPages() {
+    const pages = document.querySelectorAll('.main-content');
+    pages.forEach(page => page.classList.add('hidden'));
+}
+
+// Функция для обработки нажатия на кнопку "Claim"
+function claimTask(button) {
+    if (button.classList.contains('claimed')) return; // Проверяем, было ли уже получено вознаграждение
+
+    button.classList.add('loading'); // Добавляем класс загрузки
+    button.textContent = ''; // Очищаем текст во время загрузки
+
+    // Перенаправление в Telegram-канал
+    window.open('https://t.me/hamster_kombat', '_blank');
+
+    // Ставим задержку на 5 секунд, чтобы эмулировать анимацию загрузки
+    setTimeout(() => {
+        button.classList.remove('loading'); // Убираем анимацию загрузки
+        button.classList.add('claimed'); // Добавляем стиль "Claimed"
+        button.textContent = 'Claimed'; // Меняем текст на "Claimed"
+        button.disabled = true; // Отключаем кнопку
+
+        addCoins(500); // Добавляем 500 монет на баланс
+
+        // Сохраняем состояние задания
+        localStorage.setItem('taskClaimed', 'true');
+    }, 5000);
+}
+
+// Функция для обработки нажатия на кнопку "Invite Friends"
+function inviteFriends() {
+    // Создаем уникальную ссылку с вашим userId
+    const inviteLink = `https://t.me/Zeuscoins_bot/Zeus?ref=${userId}`;
+    const text = `Join me in this awesome game!`;
+
+    // Используем API Telegram для обмена ссылкой
+    if (navigator.share) {
+        navigator.share({
+            title: 'Invite Friends',
+            text: text,
+            url: inviteLink
+        }).catch(console.error);
+    } else {
+        alert("Copy this link to invite your friends: " + inviteLink);
     }
-
-    function showTasks() {
-        hideAllPages();
-        document.getElementById('tasks').classList.remove('hidden');
-    }
-
-    function showFriends() {
-        hideAllPages();
-        document.getElementById('friends').classList.remove('hidden');
-    }
-
-    function showLeaderboard() {
-        hideAllPages();
-        document.getElementById('leaderboard').classList.remove('hidden');
-    }
-
-    function showBlackScreen() {
-        hideAllPages();
-        document.getElementById('black-screen').classList.remove('hidden');
-    }
-
-    function hideAllPages() {
-        const pages = document.querySelectorAll('.main-content');
-        pages.forEach(page => page.classList.add('hidden'));
-    }
-
-    // Функция для обработки нажатия на кнопку "Claim"
-    function claimTask(button) {
-        if (button.classList.contains('claimed')) return; // Проверяем, было ли уже получено вознаграждение
-
-        button.classList.add('loading'); // Добавляем класс загрузки
-        button.textContent = ''; // Очищаем текст во время загрузки
-
-        // Перенаправление в Telegram-канал
-        window.open('https://t.me/hamster_kombat', '_blank');
-
-        // Ставим задержку на 5 секунд, чтобы эмулировать анимацию загрузки
-        setTimeout(() => {
-            button.classList.remove('loading'); // Убираем анимацию загрузки
-            button.classList.add('claimed'); // Добавляем стиль "Claimed"
-            button.textContent = 'Claimed'; // Меняем текст на "Claimed"
-            button.disabled = true; // Отключаем кнопку
-
-            addCoins(500); // Добавляем 500 монет на баланс
-
-            // Сохраняем состояние задания
-            localStorage.setItem('taskClaimed', 'true');
-        }, 5000);
-    }
-
-    // Функция для обработки нажатия на кнопку "Invite Friends"
-    function inviteFriends() {
-        // Создаем уникальную ссылку с вашим userId
-        const inviteLink = `https://t.me/Zeuscoins_bot/Zeus?ref=${userId}`;
-        const text = `Join me in this awesome game!`;
-
-        // Используем API Telegram для обмена ссылкой
-        if (navigator.share) {
-            navigator.share({
-                title: 'Invite Friends',
-                text: text,
-                url: inviteLink
-            }).catch(console.error);
-        } else {
-            alert("Copy this link to invite your friends: " + inviteLink);
-        }
-    }
+}
 </script>
 
 </body>
