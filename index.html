@@ -189,32 +189,32 @@
             background-color: #f0f0f0; /* Цвет при наведении */
         }
         .invite-text {
-    font-size: 5vw; /* Размер текста */
-          width: 70vw;
-    color: rgba(255, 255, 255, 0.6); /* Серый цвет */
-    text-align: center; /* Центрирование текста */
-    margin-bottom: 20px; /* Отступ снизу */
-}
-.invited-friends {
-    width: 90vw;
-    height: 45vh;
-    justify-items: center;
-    margin-top: 15px; /* Отступ сверху */
-    font-size: 5vw; /* Размер текста */
-    border-radius: 40px;
-    background-color: #555; /* Серый цвет */
-    border: #222222 solid 5px;
-    color: white; /* Цвет текста */
-    padding: 10px; /* Внутренние отступы */
-    text-align: center; /* Центрирование текста */
-}
-.invited-friends p{
-  margin-top: 10px;
-  font-size: 25px;
-}
-#invited-count{
-  font-size: 55vw;
-}
+            font-size: 5vw; /* Размер текста */
+            width: 70vw;
+            color: rgba(255, 255, 255, 0.6); /* Серый цвет */
+            text-align: center; /* Центрирование текста */
+            margin-bottom: 20px; /* Отступ снизу */
+        }
+        .invited-friends {
+            width: 90vw;
+            height: 45vh;
+            justify-items: center;
+            margin-top: 15px; /* Отступ сверху */
+            font-size: 5vw; /* Размер текста */
+            border-radius: 40px;
+            background-color: #555; /* Серый цвет */
+            border: #222222 solid 5px;
+            color: white; /* Цвет текста */
+            padding: 10px; /* Внутренние отступы */
+            text-align: center; /* Центрирование текста */
+        }
+        .invited-friends p{
+            margin-top: 10px;
+            font-size: 25px;
+        }
+        #invited-count{
+            font-size: 55vw;
+        }
     </style>
 </head>
 <body>
@@ -242,22 +242,21 @@
         </div>
     </div>
 
-<!-- Страница с приглашенными друзьями -->
-<div id="friends" class="main-content hidden">
-    <h2>Invite Friends</h2>
-<div class="invite-text">
-    <b>Invite your friends to get more Zeus Points💰</b>
-</div>
-<div class="points-container">
-    <div class="invited-friends">
-      <span id="invited-count">0</span><p><b>Friends Invited</b></p>
+    <!-- Страница с приглашенными друзьями -->
+    <div id="friends" class="main-content hidden">
+        <h2>Invite Friends</h2>
+        <div class="invite-text">
+            <b>Invite your friends to get more Zeus Points💰</b>
+        </div>
+        <div class="points-container">
+            <div class="invited-friends">
+                <span id="invited-count">0</span><p><b>Friends Invited</b></p>
+            </div>
+        </div>
+        <div class="invite-button-container">
+            <button class="invite-button" onclick="inviteFriends()"><b>Invite Friends</b></button>
+        </div>
     </div>
-</div>
-<div class="invite-button-container">
-    <button class="invite-button" onclick="inviteFriends()"><b>Invite Friends</b></button>
-</div>
-</div>
-
 
     <!-- Страница с таблицей лидеров -->
     <div id="leaderboard" class="main-content hidden">
@@ -308,12 +307,45 @@
         loadCoins();
     });
 
+    let coinCount = 0; // Инициализация переменной coinCount
+    let invitedCount = 0; // Инициализация переменной для приглашенных друзей
+
+    // Генерируем или получаем уникальный идентификатор пользователя
+    let userId = localStorage.getItem('userId');
+    if (!userId) {
+        userId = 'user_' + Date.now();
+        localStorage.setItem('userId', userId);
+    }
+
     window.onload = function() {
+        // Обработка реферального параметра
+        const urlParams = new URLSearchParams(window.location.search);
+        const refId = urlParams.get('ref');
+
+        // Если есть реферальный идентификатор и он не равен нашему собственному
+        if (refId && refId !== userId) {
+            let referrals = JSON.parse(localStorage.getItem('referrals')) || [];
+
+            if (!referrals.includes(refId)) {
+                // Увеличиваем счетчик приглашенных друзей
+                invitedCount = parseInt(localStorage.getItem('invitedCount')) || 0;
+                invitedCount++;
+                localStorage.setItem('invitedCount', invitedCount);
+                document.getElementById('invited-count').textContent = invitedCount;
+
+                // Сохраняем список обработанных рефералов
+                referrals.push(refId);
+                localStorage.setItem('referrals', JSON.stringify(referrals));
+            }
+        } else {
+            // Загружаем счетчик приглашенных друзей из localStorage
+            invitedCount = parseInt(localStorage.getItem('invitedCount')) || 0;
+            document.getElementById('invited-count').textContent = invitedCount;
+        }
+
         goHome();
         activateButton(document.getElementById('homeButton'));
     };
-
-    let coinCount = 0; // Инициализация переменной coinCount
 
     // Функция для загрузки количества монет и состояния задания
     function loadCoins() {
@@ -386,7 +418,7 @@
         button.textContent = ''; // Очищаем текст во время загрузки
 
         // Перенаправление в Telegram-канал
-        window.open('https://t.me/hamster_kombat', '_blank'); // Замените your_channel_name на имя вашего канала
+        window.open('https://t.me/hamster_kombat', '_blank');
 
         // Ставим задержку на 5 секунд, чтобы эмулировать анимацию загрузки
         setTimeout(() => {
@@ -399,32 +431,26 @@
 
             // Сохраняем состояние задания
             localStorage.setItem('taskClaimed', 'true');
-        }, 5000); // Устанавливаем задержку в 5000 миллисекунд (5 секунд)
+        }, 5000);
     }
 
-let invitedCount = 0; // Инициализация переменной для приглашенных друзей
+    // Функция для обработки нажатия на кнопку "Invite Friends"
+    function inviteFriends() {
+        // Создаем уникальную ссылку с вашим userId
+        const inviteLink = `https://t.me/Zeuscoins_bot/Zeus?ref=${userId}`;
+        const text = `Join me in this awesome game! ${inviteLink}`;
 
-// Функция для обработки нажатия на кнопку "Invite Friends"
-function inviteFriends() {
-    invitedCount++; // Увеличиваем счетчик приглашенных
-    document.getElementById('invited-count').textContent = invitedCount; // Обновляем отображение
-
-    // Здесь вы можете создать свою ссылку для приглашения
-    const inviteLink = "t.me/Zeuscoins_bot"; // Замените на свою ссылку
-    const text = `Join me in this awesome game! ${inviteLink}`;
-
-    // Используем API Telegram для обмена ссылкой
-    if (navigator.share) {
-        navigator.share({
-            title: 'Invite Friends',
-            text: text,
-            url: inviteLink
-        }).catch(console.error);
-    } else {
-        alert("Copy this link to invite your friends: " + inviteLink);
+        // Используем API Telegram для обмена ссылкой
+        if (navigator.share) {
+            navigator.share({
+                title: 'Invite Friends',
+                text: text,
+                url: inviteLink
+            }).catch(console.error);
+        } else {
+            alert("Copy this link to invite your friends: " + inviteLink);
+        }
     }
-}
-
 </script>
 
 </body>
