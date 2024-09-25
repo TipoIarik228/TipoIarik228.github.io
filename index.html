@@ -448,43 +448,6 @@ function inviteFriends() {
         alert("Copy this link to invite your friends: " + inviteLink);
     }
 }
-// Функция для загрузки данных пользователя
-async function loadUserData() {
-    const response = await fetch(`/user/${userId}`);
-    const userData = await response.json();
-    coinCount = userData.coin_count;
-    invitedCount = userData.invited_count;
-
-    document.getElementById('coin-count').textContent = coinCount;
-    document.getElementById('invited-count').textContent = invitedCount;
-}
-
-// Функция для добавления монет на сервере
-async function addCoinsToServer(amount) {
-    await fetch(`/user/${userId}/add-coins`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ coins: amount })
-    });
-    coinCount += amount;
-    document.getElementById('coin-count').textContent = coinCount;
-}
-
-// Функция для увеличения количества приглашенных друзей
-async function incrementInvitedCount() {
-    await fetch(`/user/${userId}/add-invited`, {
-        method: 'POST'
-    });
-    invitedCount += 1;
-    document.getElementById('invited-count').textContent = invitedCount;
-}
-
-window.onload = function() {
-    loadUserData(); // Загружаем данные при запуске
-};
-
 </script>
 </body>
 </html>
